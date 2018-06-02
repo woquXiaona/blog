@@ -269,8 +269,7 @@ public class UserController extends HttpServlet {
             retMap.put("success", false);
         }
         OutJson.print(request, response, retMap);
-    }
-    */
+    }*/
 
     /**
      * 根据id获取用户信息
