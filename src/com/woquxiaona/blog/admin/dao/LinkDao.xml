@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.woquxiaona.blog.admin.dao.LinkDao">
+
+    <!--获取当前最大排序号-->
+    <select id="getMaxOrderNo" resultType="Link">
+        SELECT orderNo
+        FROM blog_links
+        ORDER BY orderNo DESC
+        LIMIT 0, 1
+    </select>
+
+    <!--添加友情链接-->
+    <insert id="addLinks" parameterType="Link">
+        INSERT INTO blog_links
+        (
+            link_id,
+            link_url,
+            link_name,
+            link_target,
+            link_description,
+            link_status,
+            orderNo
+        )
+        VALUES
+            (
+                #{link_id},
+                #{link_url},
+                #{link_name},
+                #{link_target},
+                #{link_description},
+                #{link_status},
+                #{orderNo}
+            )
+    </insert>
+
+    <!--获取友情链接列表-->
+    <select id="getAll" resultType="Link">
+        SELECT *
+        FROM blog_links
+        ORDER BY orderNo ASC
+    </select>
+
+    <!--启用链接-->
+    <update id="enableLink">
+        UPDATE blog_links
+        SET link_status = "1"
+        WHERE link_id = #{arg0}
+    </update>
+
+    <!--禁用链接-->
+    <update id="disableLink">
+        UPDATE blog_links
+        SET link_status = "0"
+        WHERE link_id = #{arg0}
+    </update>
+
+    <!--删除链接-->
+    <delete id="deleteById">
+        DELETE FROM blog_links
+        WHERE link_id = #{arg0}
+    </delete>
+
+    <!--获取链接详情-->
+    <select id="detail" resultType="Link">
+        SELECT *
+        FROM blog_links
+        WHERE link_id = #{arg0}
+    </select>
+
+    <!--修改链接-->
+    <update id="modifyLink" parameterType="Link">
+        UPDATE blog_links
+        SET link_name= #{link_name}, link_url = #{link_url}, link_target = #{link_target},
+            link_description = #{link_description}
+        WHERE link_id = #{link_id}
+    </update>
+</mapper>

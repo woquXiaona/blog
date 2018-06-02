@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.woquxiaona.blog.admin.dao.MenuDao">
+
+    <!--获取最大排序号-->
+    <select id="getMaxOrderNo" resultType="Menu">
+        SELECT orderNo
+        FROM blog_nav
+        ORDER BY orderNo DESC
+        LIMIT 0, 1
+    </select>
+
+    <!--添加菜单-->
+    <insert id="addMenu" parameterType="Menu">
+        INSERT INTO blog_nav (id, name, url, target, status, orderNo)
+        VALUES (#{id}, #{name}, #{url}, #{target}, #{status}, #{orderNo})
+    </insert>
+
+    <!--获取菜单总数量-->
+    <select id="getTotal" resultType="long">
+        SELECT count(*)
+        FROM blog_nav
+    </select>
+
+    <!--获取菜单列表-->
+    <select id="getList" resultType="Menu">
+        SELECT *
+        FROM blog_nav
+        ORDER BY orderNo ASC
+        LIMIT #{startIndex}, #{pageSize}
+    </select>
+
+    <!--删除菜单-->
+    <delete id="deleteById">
+        DELETE FROM blog_nav
+        WHERE id = #{arg0}
+    </delete>
+
+    <!--菜单详情-->
+    <select id="detail" resultType="Menu">
+        SELECT *
+        FROM blog_nav
+        WHERE id = #{arg0}
+    </select>
+
+    <!--修改菜单-->
+    <update id="modifyMenu" parameterType="Menu">
+        UPDATE blog_nav
+        SET name = #{name}, url = #{url}, target = #{target}, status = #{status}
+        WHERE id = #{id}
+    </update>
+</mapper>

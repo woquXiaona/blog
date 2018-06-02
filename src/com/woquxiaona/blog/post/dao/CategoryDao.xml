@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.woquxiaona.blog.post.dao.CategoryDao">
+
+    <!--查询除"未分类"之外的其他分类-->
+    <select id="listCategory" resultType="Category">
+        SELECT *
+        FROM blog_category
+        WHERE orderNo > 0
+        ORDER BY orderNo ASC
+    </select>
+
+    <!--查询所有分类-->
+    <select id="listAllCategory" resultType="Category">
+        SELECT *
+        FROM blog_category
+        ORDER BY orderNo ASC
+    </select>
+
+    <!--获得当前最大排序号-->
+    <select id="getMaxOrderNo" resultType="Category">
+        SELECT orderNo
+        FROM blog_category
+        ORDER BY orderNo DESC
+        LIMIT 0, 1
+    </select>
+
+    <!--添加分类-->
+    <insert id="addClassify" parameterType="Category">
+        INSERT INTO blog_category
+        (id, name, url, orderNo)
+        VALUES (#{id}, #{name}, #{url}, #{orderNo})
+    </insert>
+
+    <!--根据id获取分类详情-->
+    <select id="getById" resultType="Category">
+        SELECT *
+        FROM blog_category
+        WHERE id = #{arg0}
+    </select>
+
+    <!--保存修改分类-->
+    <update id="modifyClassify" parameterType="Category">
+        UPDATE blog_category
+        SET name = #{name}, url = #{url}
+        WHERE id = #{id}
+    </update>
+
+    <!--根据id删除分类-->
+    <delete id="deleteClassifyById">
+        DELETE FROM blog_category
+        WHERE id = #{arg0}
+    </delete>
+</mapper>

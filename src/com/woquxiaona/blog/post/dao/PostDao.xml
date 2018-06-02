@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.woquxiaona.blog.post.dao.PostDao">
+
+    <!--查询非私密/未删除/已审核的博客总数量-->
+    <select id="getTotal" resultType="long">
+        SELECT count(*)
+        FROM blog_posts
+        WHERE status = 1 AND checked_status = 1 AND post_status = 1
+    </select>
+
+    <!--查询未分类的id,如果没选择分类,默认未未分类-->
+    <select id="queryCategoryByOrderNo" resultType="String">
+        SELECT id
+        FROM blog_category
+        WHERE orderNo = 0
+    </select>
+
+    <!--分页查询博客列表-->
+    <select id="getListPost" resultType="Post">
+        SELECT
+            p.id,
+            p.post_title,
+            p.post_hits,
+            u.user_nickname AS post_author,
+            p.thumbnail,
+            p.post_excerpt,
+            c.name          AS post_type,
+            p.post_time,
+            p.post_modified_time,
+            p.istop,
+            p.recommended,
+            p.post_comment_counts,
+            p.post_like
+        FROM
+            blog_posts AS p
+            JOIN blog_category AS c
+                ON p.post_type = c.id
+            JOIN blog_users AS u
+                ON p.post_author = u.id
+        WHERE p.status = 1 AND p.post_status = 1 AND p.checked_status = 1
+        ORDER BY p.post_time DESC
+        LIMIT #{startIndex}, #{pageSize}
+    </select>
+
+    <!--根据id查询点赞数-->
+    <select id="getLikesById" resultType="int">
+        SELECT post_like
+        FROM blog_posts
+        WHERE id = #{id}
+    </select>
+
+    <!--点赞-->
+    <update id="addLikes">
+        UPDATE blog_posts
+        SET post_like = #{arg1}
+        WHERE id = #{arg0}
+    </update>
+
+    <!--博客详情-->
+    <select id="view" resultType="Post">
+        SELECT
+            p.id,
+            p.post_title,
+            p.thumbnail,
+            p.post_excerpt,
+            p.post_time,
+            u.user_nickname AS post_author,
+            p.post_hits,
+            p.post_content
+        FROM
+            blog_posts AS p
+            JOIN blog_users AS u ON p.post_author = u.id
+        WHERE p.id = #{id}
+    </select>
+
+    <!--模糊查询-->
+    <select id="queryByCondition" resultType="Post">
+        SELECT
+            p.id,
+            u.user_nickname AS author,
+            p.post_title,
+            p.post_time,
+            p.post_excerpt,
+            p.post_content,
+            p.post_modified_time,
+            p.post_like,
+            p.post_hits,
+            p.istop,
+            p.recommended
+        FROM blog_posts AS p
+            JOIN blog_users AS u
+                ON p.post_author = u.id
+        WHERE p.post_status = "1" AND p.post_title LIKE '%' #{title} '%' AND status = 1 AND checked_status = 1
+    </select>
+
+    <!--查询当前阅读量-->
+    <select id="getHitsById" resultType="int">
+        SELECT post_hits
+        FROM blog_posts
+        WHERE id = #{arg0}
+    </select>
+
+    <!--增加阅读量-->
+    <update id="addHits">
+        UPDATE blog_posts
+        SET post_hits = #{arg1}
+        WHERE id = #{arg0}
+    </update>
+
+    <!--热门点击-->
+    <select id="getHotListPost" resultType="Post">
+        SELECT
+            p.id,
+            p.post_title,
+            p.thumbnail,
+            p.post_excerpt,
+            c.name AS post_type,
+            p.post_time,
+            p.post_modified_time,
+            p.post_comment_counts,
+            p.post_like,
+            p.post_hits
+        FROM
+            blog_posts AS p
+            JOIN blog_category AS c
+                ON p.post_type = c.id
+        WHERE p.status = 1 AND p.post_status = 1 AND checked_status = 1
+        ORDER BY p.post_hits DESC
+        LIMIT #{startIndex}, #{pageSize}
+    </select>
+
+    <!--写文章-->
+    <insert id="save" parameterType="Post">
+        INSERT INTO blog_posts
+        (id, post_title, post_author, post_time, post_type, post_keywords, post_source, post_content, comment_status, post_status, thumbnail, recommended, post_excerpt, istop)
+        VALUES
+            (#{id}, #{post_title}, #{post_author}, #{post_time}, #{post_type}, #{post_keywords}, #{post_source},
+                    #{post_content}, #{comment_status}, #{post_status}, #{thumbnail}, #{recommended}, #{post_excerpt},
+             #{istop})
+    </insert>
+
+    <!--推荐文章列表-->
+    <select id="getTuijianListPost" resultType="Post">
+        SELECT
+            id,
+            post_title
+        FROM
+            blog_posts
+        WHERE status = 1 AND post_status = 1 AND checked_status = 1
+        ORDER BY post_like DESC
+        LIMIT #{startIndex}, #{pageSize}
+    </select>
+
+    <!--删除单条博客-->
+    <update id="removeById">
+        UPDATE blog_posts
+        SET status = 0
+        WHERE id = #{arg0}
+    </update>
+
+    <!--获取已删除博客总数量-->
+    <select id="getRecycledTotal" resultType="long">
+        SELECT count(*)
+        FROM blog_posts
+        WHERE status = 0
+    </select>
+
+    <!--已删除博客列表-->
+    <select id="listRecycledPosts" resultType="Post">
+        SELECT
+            p.id,
+            p.post_title,
+            p.post_hits,
+            p.post_comment_counts,
+            u.user_nickname AS post_author,
+            p.post_time,
+            p.checked_status,
+            p.recommended,
+            p.istop
+        FROM blog_posts AS p
+            JOIN blog_users AS u
+                ON p.post_author = u.id
+        WHERE p.status = 0
+        ORDER BY p.post_modified_time DESC
+        LIMIT #{startIndex}, #{pageSize}
+    </select>
+
+    <!--还原文章-->
+    <update id="restore">
+        UPDATE blog_posts
+        SET status = 1
+        WHERE id = #{arg0}
+    </update>
+
+    <!--彻底删除文章-->
+    <delete id="completelyDelete">
+        DELETE FROM blog_posts
+        WHERE id = #{arg0}
+    </delete>
+
+    <!--批量彻底删除文章-->
+    <delete id="completelyDeleteSelected">
+        DELETE FROM blog_posts WHERE id IN
+        <foreach collection="array" open="(" close=")" item="id" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--批量还原文章-->
+    <update id="restoreSelected">
+        UPDATE blog_posts
+        SET status = 1
+        WHERE id IN
+        <foreach collection="array" open="(" close=")" item="id" separator=",">
+            #{id}
+        </foreach>
+    </update>
+
+    <!--文章详情-->
+    <select id="detail" resultType="Post">
+        SELECT *
+        FROM blog_posts
+        WHERE id = #{arg0}
+    </select>
+
+    <!--获取分类列表-->
+    <select id="getCategories" resultType="Category">
+        SELECT *
+        FROM blog_category
+        ORDER BY orderNo ASC
+    </select>
+
+    <!--查询未删除的博客总数量-->
+    <select id="getAllTotal" resultType="long">
+        SELECT count(*)
+        FROM blog_posts
+        WHERE status = 1
+    </select>
+
+    <!--所有文章-->
+    <select id="listAllPosts" resultType="Post">
+        SELECT
+            p.id,
+            p.post_title,
+            p.post_hits,
+            u.user_nickname AS post_author,
+            p.thumbnail,
+            p.post_excerpt,
+            c.name AS post_type,
+            p.post_time,
+            p.post_modified_time,
+            p.istop,
+            p.recommended,
+            p.post_comment_counts,
+            p.post_like
+        FROM
+            blog_posts AS p
+            JOIN blog_category AS c
+                ON p.post_type = c.id
+            JOIN blog_users AS u
+                ON p.post_author = u.id
+        WHERE p.status = 1
+        ORDER BY p.post_time DESC
+        LIMIT #{startIndex}, #{pageSize}
+    </select>
+
+</mapper>

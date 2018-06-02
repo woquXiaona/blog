@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.woquxiaona.blog.admin.dao.UserDao">
+
+    <!--登录后台-->
+    <select id="login" resultType="User">
+        SELECT *
+        FROM blog_users
+        WHERE user_login = #{arg0} AND user_pass = #{arg1}
+    </select>
+
+    <!--获取博主信息,显示我的名片-->
+    <select id="getBloggerInfo" resultType="User">
+        SELECT *
+        FROM blog_users
+        WHERE blog_users.user_type = 1
+    </select>
+
+    <!--查询原密码是否正确-->
+    <select id="getByUser_LoginAndOld_User_Pass" resultType="User">
+        SELECT *
+        FROM blog_users
+        WHERE user_pass = #{old_user_pass} AND id = #{id}
+    </select>
+
+    <!--修改密码-->
+    <select id="changePassword" resultType="User">
+        UPDATE blog_users
+        SET user_pass = #{new_user_pass}
+        WHERE id = #{id}
+    </select>
+
+    <!--判断用户名是否已存在-->
+    <select id="checkUser" resultType="User">
+        SELECT *
+        FROM blog_users
+        WHERE user_login = #{username}
+    </select>
+
+    <!--用户注册-->
+    <insert id="save" parameterType="User">
+        INSERT INTO blog_users (id, user_login, user_pass, user_email, create_time, user_status, user_type)
+        VALUES (#{id}, #{user_login}, #{user_pass}, #{user_email}, #{create_time}, #{user_status}, #{user_type})
+    </insert>
+
+    <!--获取用户数量-->
+    <select id="getTotal" resultType="long">
+        SELECT count(*)
+        FROM blog_users
+    </select>
+
+    <!--获取用户列表-->
+    <select id="getList" resultType="User">
+        SELECT * FROM blog_users
+        <where>
+            <if test="name!=null and name!=''">
+                and user_nickname like '%${name}%' or user_login like '%${name}%'
+            </if>
+        </where>
+        ORDER BY create_time DESC LIMIT #{startIndex},#{pageSize}
+    </select>
+
+    <!--记录登录信息-->
+    <update id="record">
+        UPDATE blog_users
+        SET last_login_time = #{arg1}, last_login_ip = #{arg2}
+        WHERE id = #{arg0}
+    </update>
+
+    <!--启用账户-->
+    <update id="enable">
+        UPDATE blog_users
+        SET user_status = 1
+        WHERE id = #{arg0}
+    </update>
+
+    <!--封禁账户-->
+    <update id="disable">
+        UPDATE blog_users
+        SET user_status = 0
+        WHERE id = #{arg0}
+    </update>
+
+    <!--降级-->
+    <update id="downgrade">
+        UPDATE blog_users
+        SET user_type = #{arg1}
+        WHERE id = #{arg0}
+    </update>
+
+    <!--升级-->
+    <update id="upgrade">
+        UPDATE blog_users
+        SET user_type = #{arg1}
+        WHERE id = #{arg0}
+    </update>
+
+    <!--根据id获取用户信息-->
+    <select id="getById" resultType="User">
+        SELECT *
+        FROM blog_users
+        WHERE id = #{arg0}
+    </select>
+
+    <!--修改用户信息-->
+    <update id="modifyUser" parameterType="User">
+        UPDATE blog_users
+        SET user_nickname = #{user_nickname},
+            sex           = #{sex},
+            birthday      = #{birthday},
+            user_email    = #{user_email},
+            university    = #{university},
+            mobile        = #{mobile},
+            qq            = #{qq},
+            weibo         = #{weibo},
+            wechat        = #{wechat},
+            facebook      = #{facebook},
+            twitter       = #{twitter},
+            signature     = #{signature},
+            avatar        = #{avatar}
+        WHERE id = #{id}
+    </update>
+</mapper>
