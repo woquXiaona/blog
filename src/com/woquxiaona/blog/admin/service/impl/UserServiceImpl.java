@@ -1,6 +1,7 @@
 package com.woquxiaona.blog.admin.service.impl;
 
 import com.woquxiaona.blog.admin.dao.UserDao;
+import com.woquxiaona.blog.admin.domain.GuestBook;
 import com.woquxiaona.blog.admin.domain.User;
 import com.woquxiaona.blog.admin.service.UserService;
 import com.woquxiaona.blog.exceptions.LoginException;
@@ -28,7 +29,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public User login(String username, String pwd,String ip) throws LoginException {
+    public User login(String username, String pwd, String ip) throws LoginException {
         User user = userDao.login(username, pwd);
         if (user == null) {
             throw new LoginException("用户名或密码错误!");
@@ -36,7 +37,7 @@ public class UserServiceImpl implements UserService {
         if (user.getUser_status() != null && "0".equals(user.getUser_status())) {
             throw new LoginException("该账号被封禁!");
         }
-        userDao.record(user.getId(), DateUtil.getSysTime(),ip);
+        userDao.record(user.getId(), DateUtil.getSysTime(), ip);
         return user;
     }
 
@@ -105,6 +106,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 启用账户
+     *
      * @param id
      * @return
      */
@@ -115,6 +117,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 封禁账户
+     *
      * @param id
      * @return
      */
@@ -125,27 +128,30 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 降级
+     *
      * @param user_type
      * @return
      */
     @Override
-    public int downgrade(String id,Integer user_type) {
-        return userDao.downgrade(id,user_type);
+    public int downgrade(String id, Integer user_type) {
+        return userDao.downgrade(id, user_type);
     }
 
     /**
      * 升级
+     *
      * @param id
      * @param user_type
      * @return
      */
     @Override
     public int upgrade(String id, Integer user_type) {
-        return userDao.upgrade(id,user_type);
+        return userDao.upgrade(id, user_type);
     }
 
     /**
      * 根据id获取用户信息
+     *
      * @param id
      * @return
      */
@@ -156,6 +162,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 修改用户信息
+     *
      * @param user
      * @return
      */
@@ -163,4 +170,16 @@ public class UserServiceImpl implements UserService {
     public int modifyUser(User user) {
         return userDao.modifyUser(user);
     }
+
+    /**
+     * 用户留言
+     *
+     * @param guestBook
+     * @return
+     */
+    @Override
+    public int guestBook(GuestBook guestBook) {
+        return userDao.guestBook(guestBook);
+    }
+
 }

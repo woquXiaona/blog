@@ -1,5 +1,6 @@
 package com.woquxiaona.blog.admin.dao;
 
+import com.woquxiaona.blog.admin.domain.GuestBook;
 import com.woquxiaona.blog.admin.domain.User;
 
 import java.util.List;
@@ -112,4 +113,11 @@ public interface UserDao {
      * @return
      */
     int modifyUser(User user);
+
+    /**
+     * 用户留言
+     * @param guestBook
+     * @return
+     */
+    int guestBook(GuestBook guestBook);
 }

@@ -35,7 +35,7 @@
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="index.jsp" title="首页" target="_self"><span class="glyphicon glyphicon-home"></span></a>
+                    <li><a href="index.jsp" title="首页" target="_blank"><span class="glyphicon glyphicon-home"></span></a>
                     </li>
                     <li><a href="admin/write.jsp" title="写文章"><span
                             class="glyphicon glyphicon-pencil"></span></a></li>
@@ -272,7 +272,7 @@
                         <div class="text-center"><br>
                             <h4>点击下面按钮将清除站点缓存</h4><br><br>
                             <input type="hidden" name="clearcache" value="clearcache">
-                            <button type="submit" class="btn btn-default">清除缓存<span class="hidden">&nbsp;<img
+                            <button type="submit" class="btn btn-default" onclick="javascript:alert('清除成功')">清除缓存<span class="hidden">&nbsp;<img
                                     src="images/zhixing.gif" width="16" height="16"></span>
                             </button>
                         </div>

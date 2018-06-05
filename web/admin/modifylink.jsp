@@ -79,7 +79,7 @@
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="index.jsp" title="首页" target="_self"><span class="glyphicon glyphicon-home"></span></a>
+                    <li><a href="index.jsp" title="首页" target="_blank"><span class="glyphicon glyphicon-home"></span></a>
                     </li>
                     <li><a href="admin/write.jsp" title="写文章"><span class="glyphicon glyphicon-pencil"></span></a></li>
                     <li><a href="admin/personal.jsp" title="修改个人信息"><span

@@ -51,4 +51,12 @@ public interface CategoryService {
      * @return
      */
     int deleteClassifyById(String id);
+
+    /**
+     * 获取导航菜单
+     *
+     * @param count
+     * @return
+     */
+    List<Category> getNav(Integer count);
 }

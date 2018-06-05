@@ -357,7 +357,9 @@
     </div>
 </footer>
 <!-- jQuery仿腾讯回顶部和建议 代码开始 -->
-<div id="tbox"><a id="togbook" href="/e/tool/gbook/?bid=1"></a> <a id="gotop" href="javascript:void(0)"></a></div>
+<div id="tbox">
+    <a id="togbook" href="guestbook.jsp"></a>
+    <a id="gotop" href="javascript:void(0)"></a></div>
 <!-- 代码结束 -->
 </body>
 </html>

@@ -134,4 +134,11 @@ public interface PostService {
      * @return
      */
     PaginationVO<Post> listAllPosts(Map<String, Object> map);
+
+    /**
+     * 编辑文章
+     * @param post
+     * @return
+     */
+    int rewrite(Post post);
 }

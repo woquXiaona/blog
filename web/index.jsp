@@ -31,7 +31,7 @@
     <script type="text/javascript">
         $(function () {
             //导航菜单
-            category();
+            category(7);
             //博客列表
             blogList(1, 5);
             //推荐文章
@@ -97,14 +97,17 @@
         });
 
         //导航菜单
-        function category() {
+        function category(count) {
             $.ajax({
-                url: 'post/category/list.do',
+                url: 'post/category/getNav.do',
+                data:{
+                    "count":count
+                },
                 type: 'get',
                 success: function (data) {
                     if (data.success) {
                         var html = "";
-                        $.each(data.categories, function (index, obj) {
+                        $.each(data.navList, function (index, obj) {
                             html += "<li><a href='" + obj.url + "' target='_self' title='" + obj.name + "'>" + obj.name + "</a></li>";
                         });
                         $("#categroy").html(html);
@@ -235,6 +238,7 @@
                 }
             });
         }
+        
     </script>
 </head>
 <body>
@@ -282,7 +286,7 @@
             </p>
             <ul class="linkmore">
                 <li>
-                    <a href="#!"
+                    <a href="guestbook.jsp"
                        data-method="offset"
                        data-type="auto"
                        class="talk"
@@ -313,31 +317,10 @@
             </div>
             <div class="clicks">
                 <h2>热门点击</h2>
-                <ol id="hotBlogsList">
-                    <%--<li><span><a href="/">慢生活</a></span><a href="/">有一种思念，是淡淡的幸福,一个心情一行文字</a></li>
-                    <li><span><a href="/">爱情美文</a></span><a href="/">励志人生-要做一个潇洒的女人</a></li>
-                    <li><span><a href="/">慢生活</a></span><a href="/">女孩都有浪漫的小情怀――浪漫的求婚词</a></li>
-                    <li><span><a href="/">博客模板</a></span><a href="/">Green绿色小清新的夏天-个人博客模板</a></li>
-                    <li><span><a href="/">女生个人博客</a></span><a href="/">女生清新个人博客网站模板</a></li>
-                    <li><span><a href="/">Wedding</a></span><a href="/">Wedding-婚礼主题、情人节网站模板</a></li>
-                    <li><span><a href="/">三栏布局</a></span><a href="/">Column 三栏布局 个人网站模板</a></li>
-                    <li><span><a href="/">个人网站模板</a></span><a href="/">时间煮雨-个人网站模板</a></li>
---%> <%--<li><span><a href="/">古典风格</a></span><a href="/">花气袭人是酒香―个人网站模板</a></li>--%>
-                </ol>
+                <ol id="hotBlogsList"></ol>
             </div>
             <div class="visitors" id="newestCommentsList">
                 <h2>最新评论</h2>
-                <%--<dl>
-                    <dt><img src="common/images/s6.jpg">
-                    <dt>
-                    <dd>小林博客
-                        <time>8月7日</time>
-                    </dd>
-                    <dd>在 <a href="http://www.yangqq.com/jstt/bj/2013-06-18/285.html"
-                             class="title">如果个人博客网站再没有价值，你还会坚持吗？ </a>中评论：
-                    </dd>
-                    <dd>博客色彩丰富，很是好看</dd>
-                </dl>--%>
             </div>
             <div class="viny">
                 <dl>
@@ -359,9 +342,9 @@
 </div>
 <!--mainbody end-->
 <footer>
-    <center style="background-color: #333">
+    <%--<center style="background-color: #333">
         <div id="blogPagination" class="pagination"></div>
-    </center>
+    </center>--%>
     <div class="footer-mid">
         <div class="info-text">
             <center>
@@ -399,7 +382,7 @@
 </footer>
 <!-- jQuery仿腾讯回顶部和建议 代码开始 -->
 <div id="tbox">
-    <a id="togbook" href="/e/tool/gbook/?bid=1"></a>
+    <a id="togbook" href="guestbook.jsp"></a>
     <a id="gotop" href="javascript:void(0)"></a></div>
 <!-- 代码结束 -->
 </body>

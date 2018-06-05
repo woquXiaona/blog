@@ -14,6 +14,57 @@
     <link rel="stylesheet" href="common/css/bootstrap.min.css">
     <script src="common/js/jquery.min.js"></script>
     <script src="common/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="common/js/jquery.form.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            //加载评论
+            listComments(1, 10);
+        })
+
+        //查询评论列表
+        function listComments(pageNo, pageSize) {
+            $.ajax({
+                url: 'post/comment/list.do',
+                data: {
+                    "pageNo": pageNo,
+                    "pageSize": pageSize
+                },
+                type: 'get',
+                success: function (data) {
+                    var html = "";
+                    $.each(data.commentList, function (index, obj) {
+                        html += "<tr>";
+                        html += "<td>";
+                        html += "<input class='gouxuan' type='checkbox' value='"+obj.id+"'>";
+                        html += "</td>";
+                        html += "<td>"+obj.uid+"</td>";
+                        html += "<td>"+obj.email+"</td>";
+                        html += "<td></td>";
+                        html += "<td>"+obj.content+"</td>";
+                        html += "<td>"+obj.createtime+"</td>";
+                        html += "<td>";
+                        if (obj.status=="1"){
+                            html += "<h5 class='text-success'><span class='glyphicon glyphicon-ok'></span> 已审核</h5>";
+                        }else {
+                            html += "<h5 class='text-muted'><span></span> 未审核</h5>";
+                        }
+                        html += "</td>";
+                        html += "<td>";
+                        html += "<a class='twitter' data-title='确定删除吗?' href='#'>删除</a>";
+                        html += "&nbsp;|&nbsp;";
+                        if (obj.status=="1"){
+                            html += "<a class='yincang' href='#'>取消审核<span class='hidden'>&nbsp;<img src='common/images/zhixing.gif' width='16' height='16'></span></a>";
+                        }else {
+                            html += "<a class='qiyong' href='#'>审核<span class='hidden'>&nbsp;<img src='common/images/zhixing.gif' width='16' height='16'></span></a>";
+                        }
+                        html += "</td>";
+                        html += "</tr>";
+                    });
+                    $("#commentListTBody").html(html);
+                }
+            });
+        }
+    </script>
 </head>
 <body style="background-color:#96b7e0;">
 <div class="row">
@@ -297,7 +348,7 @@
                                 <th>操作</th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="commentListTBody">
                             </tbody>
                         </table>
                     </div>

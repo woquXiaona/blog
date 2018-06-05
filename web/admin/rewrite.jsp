@@ -14,9 +14,12 @@
     <link rel="stylesheet" href="common/css/bootstrap.min.css">
     <script src="common/js/jquery.min.js"></script>
     <script src="common/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="common/js/jquery.form.js"></script>
     <script type="text/javascript">
         $(function () {
             var id = "${param.id}";
+
+            //博客详情
             $.ajax({
                 url: 'post/detail.do',
                 data: {
@@ -66,6 +69,18 @@
                     }
                 }
             })
+
+            //修改文章
+            $("#baocun").on("click",function () {
+                /*$("#writeForm").ajaxForm({
+                    url:'admin/rewrite.do',
+                    type:'post',
+                    success:function () {
+                        window.location.href="admin/rewrite.jsp";
+                    }
+                });*/
+                alert("待完善")
+            });
         })
     </script>
 </head>
@@ -88,7 +103,7 @@
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="index.jsp" title="首页" target="_self"><span class="glyphicon glyphicon-home"></span></a>
+                    <li><a href="index.jsp" title="首页" target="_blank"><span class="glyphicon glyphicon-home"></span></a>
                     </li>
                     <li><a href="admin/write.jsp" title="写文章"><span class="glyphicon glyphicon-pencil"></span></a></li>
                     <li><a href="admin/personal.jsp" title="修改个人信息"><span
@@ -325,7 +340,7 @@
             <br>
             <div class="container-fluid">
                 <div class="row" style="min-height: 800px;">
-                    <form method="post" action="" name="writeForm">
+                    <form id="writeForm" method="post" action="" name="writeForm">
                         <div class="col-md-9">
                             <h4>带&nbsp;<b><span class="text-danger">*</span></b>&nbsp;号的为必填项</h4>
                             <div class="form-group">

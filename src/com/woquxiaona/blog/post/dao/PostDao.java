@@ -193,4 +193,11 @@ public interface PostDao {
      * @return
      */
     List<Post> listAllPosts(Map<String, Object> map);
+
+    /**
+     * 编辑文章
+     * @param post
+     * @return
+     */
+    int rewrite(Post post);
 }

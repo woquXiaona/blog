@@ -1,5 +1,6 @@
 package com.woquxiaona.blog.admin.web.controller;
 
+import com.woquxiaona.blog.admin.domain.GuestBook;
 import com.woquxiaona.blog.admin.domain.User;
 import com.woquxiaona.blog.admin.service.UserService;
 import com.woquxiaona.blog.admin.service.impl.UserServiceImpl;
@@ -8,7 +9,6 @@ import com.woquxiaona.blog.utils.*;
 import com.woquxiaona.blog.vo.PaginationVO;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
@@ -37,7 +37,8 @@ import java.util.Map;
         "/admin/user/downgrade.do",
         "/admin/user/upgrade.do",
         "/admin/user/getById.do",
-        "/admin/user/modifyUser.do"
+        "/admin/user/modifyUser.do",
+        "/admin/user/guestbook.do"
 })
 public class UserController extends HttpServlet {
     @Override
@@ -68,14 +69,41 @@ public class UserController extends HttpServlet {
         } else if ("/admin/user/getById.do".equals(servletPath)) {
             doGetById(request, response);
         } else if ("/admin/user/modifyUser.do".equals(servletPath)) {
-            try {
-                doModifyUser(request, response);
-            } catch (FileUploadException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            doModifyUser(request, response);
+        } else if ("/admin/user/guestbook.do".equals(servletPath)) {
+            doGuestBook(request, response);
         }
+    }
+
+    /**
+     * 用户留言
+     *
+     * @param request
+     * @param response
+     */
+    private void doGuestBook(HttpServletRequest request, HttpServletResponse response) {
+        String id = UUIDGenerator.generate();
+        String name = request.getParameter("name");
+        String title = request.getParameter("title");
+        String content = request.getParameter("content");
+        String email = request.getParameter("email");
+        String createTime = DateUtil.getSysTime();
+        GuestBook guestBook = new GuestBook();
+        guestBook.setId(id);
+        guestBook.setFull_name(name);
+        guestBook.setEmail(email);
+        guestBook.setTitle(title);
+        guestBook.setMsg(content);
+        guestBook.setCreatetime(createTime);
+        UserService userService = (UserService) new TransactionHandler(new UserServiceImpl()).getProxy();
+        int count = userService.guestBook(guestBook);
+        Map<String, Object> retMap = new HashMap<>(1);
+        if (count == 1) {
+            retMap.put("success", true);
+        } else {
+            retMap.put("success", false);
+        }
+        OutJson.print(request, response, retMap);
     }
 
     /**
@@ -84,7 +112,7 @@ public class UserController extends HttpServlet {
      * @param request
      * @param response
      */
-    private void doModifyUser(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    private void doModifyUser(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
         File file = new File(getServletContext().getRealPath("/common/mnt"));
         if (file.exists()) {
@@ -100,7 +128,7 @@ public class UserController extends HttpServlet {
         List items = null;
         try {
             items = upload.parseRequest(request);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         Iterator iterator = items.iterator();
@@ -117,159 +145,45 @@ public class UserController extends HttpServlet {
         String facebook = null;
         String twitter = null;
         String signature = null;
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             FileItem item = (FileItem) iterator.next();
-            if (item.isFormField()){
+            if (item.isFormField()) {
                 String value = item.getString();
-                if (item.getFieldName().equals("id")){
+                if (item.getFieldName().equals("id")) {
                     id = value;
-                } else if (item.getFieldName().equals("name")){
+                } else if (item.getFieldName().equals("name")) {
                     name = value;
-                } else if (item.getFieldName().equals("sex")){
+                } else if (item.getFieldName().equals("sex")) {
                     sex = value;
-                } else if (item.getFieldName().equals("birthday")){
+                } else if (item.getFieldName().equals("birthday")) {
                     birthday = value;
-                } else if (item.getFieldName().equals("email")){
+                } else if (item.getFieldName().equals("email")) {
                     email = value;
-                } else if (item.getFieldName().equals("university")){
+                } else if (item.getFieldName().equals("university")) {
                     university = value;
-                } else if (item.getFieldName().equals("mobile")){
+                } else if (item.getFieldName().equals("mobile")) {
                     mobile = value;
-                } else if (item.getFieldName().equals("qq")){
+                } else if (item.getFieldName().equals("qq")) {
                     qq = value;
-                } else if (item.getFieldName().equals("weibo")){
+                } else if (item.getFieldName().equals("weibo")) {
                     weibo = value;
-                } else if (item.getFieldName().equals("wechat")){
+                } else if (item.getFieldName().equals("wechat")) {
                     wechat = value;
-                } else if (item.getFieldName().equals("facebook")){
+                } else if (item.getFieldName().equals("facebook")) {
                     facebook = value;
-                } else if (item.getFieldName().equals("twitter")){
+                } else if (item.getFieldName().equals("twitter")) {
                     twitter = value;
-                } else if (item.getFieldName().equals("signature")){
+                } else if (item.getFieldName().equals("signature")) {
                     signature = value;
                 }
-            }else {
+            } else {
                 String fieldName = item.getFieldName();
                 String name1 = item.getName();
-                System.out.println("fieldName:"+fieldName);
-                System.out.println("name1:"+name1);
+                System.out.println("fieldName:" + fieldName);
+                System.out.println("name1:" + name1);
             }
         }
     }
-        /*DiskFileItemFactory factory = new DiskFileItemFactory();
-        ServletFileUpload upload = new ServletFileUpload(factory);
-        String[] array = new String[13];
-        List<FileItem> list = upload.parseRequest(request);
-        int index = 0;
-        for (FileItem item : list) {
-            if (item.isFormField()){
-                array[index] = item.getString();
-                System.out.println(array[index]);
-                index++;
-            }else {
-                File file = new File(getServletContext().getRealPath("/common/mnt"));
-                if (file.exists()){
-                    if (!file.isDirectory()){
-                        file.mkdir();
-                    }
-                }else {
-                    file.mkdir();
-                }
-                String path = getServletContext().getRealPath("/common/mnt");
-            }
-        }
-        User user = new User();
-        user.setId(array[0]);
-        user.setUser_nickname(array[1]);
-        user.setSex(array[2]);
-        user.setBirthday(array[3]);
-        user.setUser_email(array[4]);
-        user.setUniversity(array[5]);
-        user.setMobile(array[6]);
-        user.setQq(array[7]);
-        user.setWeibo(array[8]);
-        user.setWechat(array[9]);
-        user.setFacebook(array[10]);
-        user.setTwitter(array[11]);
-        user.setSignature(array[12]);
-        System.out.println(user);
-    }*/
-        /*File file = new File(getServletContext().getRealPath("/common/img"));
-        if (file.exists()) {
-            if (!file.isDirectory()) {
-                file.mkdir();
-            }
-        } else {
-            file.mkdir();
-        }
-        String path = getServletContext().getRealPath("/common/img");
-        FileItemFactory factory = new DiskFileItemFactory();
-        ServletFileUpload upload = new ServletFileUpload(factory);
-        List<FileItem> items = upload.parseRequest(request);
-        Iterator<FileItem> itr = items.iterator();
-        Map<String, Object> retMap = new HashMap<>();
-        String uuid = UUIDGenerator.generate();
-        while (itr.hasNext()) {
-            FileItem item = itr.next();
-            String fileName = item.getName();
-            if (fileName != null) {
-                File fullFile = new File(item.getName());
-                if (item.isFormField()){
-                    File savedFile = new File(path, uuid+"_"+fullFile.getName());
-                    item.write(savedFile);
-                }else {
-                    System.out.println(item.getString());
-                }
-                //File savedFile = new File(path, fullFile.getName());
-                //item.write(savedFile);
-                retMap.put("success", true);
-            } else {
-                retMap.put("success", false);
-            }
-        }
-        OutJson.print(request, response, retMap);
-    }*/
-
-        /*String id = request.getParameter("id");
-        String name = request.getParameter("name");
-        String sex = request.getParameter("sex");
-        System.out.println(sex);
-        String birthday = request.getParameter("birthday");
-        String email = request.getParameter("email");
-        String university = request.getParameter("university");
-        String mobile = request.getParameter("mobile");
-        String qq = request.getParameter("qq");
-        String weibo = request.getParameter("weibo");
-        String wechat = request.getParameter("wechat");
-        String facebook = request.getParameter("facebook");
-        String twitter = request.getParameter("twitter");
-        String signature = request.getParameter("signature");
-        String avatarImg = request.getParameter("avatarImg");
-        User user = new User();
-        user.setId(id);
-        user.setUser_nickname(name);
-        user.setSex(sex);
-        user.setBirthday(birthday);
-        user.setUser_email(email);
-        user.setUniversity(university);
-        user.setMobile(mobile);
-        user.setQq(qq);
-        user.setWeibo(weibo);
-        user.setWechat(wechat);
-        user.setFacebook(facebook);
-        user.setTwitter(twitter);
-        user.setSignature(signature);
-        user.setAvatar(avatarImg);
-        UserService userService = (UserService) new TransactionHandler(new UserServiceImpl()).getProxy();
-        int count = userService.modifyUser(user);
-        Map<String, Object> retMap = new HashMap<>(1);
-        if (count == 1) {
-            retMap.put("success", true);
-        } else {
-            retMap.put("success", false);
-        }
-        OutJson.print(request, response, retMap);
-    }*/
 
     /**
      * 根据id获取用户信息

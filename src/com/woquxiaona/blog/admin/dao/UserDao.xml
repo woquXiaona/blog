@@ -123,4 +123,28 @@
             avatar        = #{avatar}
         WHERE id = #{id}
     </update>
+
+    <!--用户留言-->
+    <insert id="guestBook" parameterType="Map">
+        INSERT INTO blog_guestbook (id, full_name, email, title, msg, createtime)
+        VALUES (#{id}, #{full_name}, #{email}, #{title}, #{msg}, #{createtime})
+    </insert>
+
+    <!--编辑文章-->
+    <update id="rewrite" parameterType="Post">
+        UPDATE blog_posts
+        SET setPost_title         = #{setPost_title},
+            setPost_content       = #{setPost_content},
+            setPost_keywords      = #{setPost_keywords},
+            setPost_source        = #{setPost_source},
+            setPost_excerpt       = #{setPost_excerpt},
+            setPost_type          = #{setPost_type},
+            setPost_status        = #{setPost_status},
+            setThumbnail          = #{setThumbnail},
+            setIstop              = #{setIstop},
+            setRecommended        = #{setRecommended},
+            setComment_status     = #{setComment_status},
+            setPost_modified_time = #{setPost_modified_time}
+        WHERE id = #{id}
+    </update>
 </mapper>

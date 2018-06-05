@@ -19,7 +19,7 @@
             JOIN blog_users AS u ON c.uid = u.id
             JOIN blog_posts AS p ON c.post_id = p.id
         WHERE
-            c.STATUS = "1"
+            c.STATUS = 1
         ORDER BY
             c.createtime DESC
         LIMIT #{arg0},#{arg1}

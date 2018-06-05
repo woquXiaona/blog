@@ -232,4 +232,14 @@ public class PostServiceImpl implements PostService {
         paginationVO.setList(postDao.listAllPosts(map));
         return paginationVO;
     }
+
+    /**
+     * 编辑文章
+     * @param post
+     * @return
+     */
+    @Override
+    public int rewrite(Post post) {
+        return postDao.rewrite(post);
+    }
 }

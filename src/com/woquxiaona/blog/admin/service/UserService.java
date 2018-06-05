@@ -1,5 +1,6 @@
 package com.woquxiaona.blog.admin.service;
 
+import com.woquxiaona.blog.admin.domain.GuestBook;
 import com.woquxiaona.blog.admin.domain.User;
 import com.woquxiaona.blog.exceptions.LoginException;
 import com.woquxiaona.blog.vo.PaginationVO;
@@ -101,4 +102,11 @@ public interface UserService {
      * @return
      */
     int modifyUser(User user);
+
+    /**
+     * 用户留言
+     * @param guestBook
+     * @return
+     */
+    int guestBook(GuestBook guestBook);
 }

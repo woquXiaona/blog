@@ -36,7 +36,8 @@ import java.util.Map;
         "/post/completelyDeleteSelected.do",
         "/post/restoreSelected.do",
         "/post/detail.do",
-        "/post/allList.do"
+        "/post/allList.do",
+        "/admin/rewrite.do"
 })
 public class PostController extends HttpServlet {
     @Override
@@ -74,7 +75,68 @@ public class PostController extends HttpServlet {
             doDetail(request, response);
         } else if ("/post/allList.do".equals(servletPath)) {
             doListAll(request, response);
+        } else if ("/admin/rewrite.do".equals(servletPath)) {
+            doRewrite(request, response);
         }
+    }
+
+    /**
+     * 编辑文章
+     *
+     * @param request
+     * @param response
+     */
+    private void doRewrite(HttpServletRequest request, HttpServletResponse response) {
+        String id = request.getParameter("postId");
+        String biaoti = request.getParameter("biaoti");
+        String zhengwen = request.getParameter("zhengwen");
+        String guanjianci = request.getParameter("guanjianci");
+        String laiyuan = request.getParameter("laiyuan");
+        String zhaiyao = request.getParameter("zhaiyao");
+        String fenlei = request.getParameter("fenlei[]");
+        String simiwenzhang = request.getParameter("simiwenzhang");
+        String suolvetu = request.getParameter("suolvetu");
+        String zhiding = request.getParameter("zhiding");
+        String tuijian = request.getParameter("tuijian");
+        String pinglun = request.getParameter("pinglun");
+        String modifyTime = DateUtil.getSysTime();
+        System.out.println(id);
+        System.out.println(biaoti);
+        System.out.println(zhengwen);
+        System.out.println(guanjianci);
+        System.out.println(laiyuan);
+        System.out.println(zhaiyao);
+        System.out.println(fenlei);
+        System.out.println(simiwenzhang);
+        System.out.println(suolvetu);
+        System.out.println(zhiding);
+        System.out.println(tuijian);
+        System.out.println(pinglun);
+        System.out.println(modifyTime);
+        Post post = (Post) new TransactionHandler(new PostServiceImpl()).getProxy();
+        post.setId(id);
+        post.setPost_title(biaoti);
+        post.setPost_content(zhengwen);
+        post.setPost_keywords(guanjianci);
+        post.setPost_source(laiyuan);
+        post.setPost_excerpt(zhaiyao);
+        post.setPost_type(fenlei);
+        post.setPost_status(simiwenzhang);
+        post.setThumbnail(suolvetu);
+        post.setIstop(zhiding);
+        post.setRecommended(tuijian);
+        post.setComment_status(pinglun);
+        post.setPost_modified_time(modifyTime);
+        /*PostService postService = (PostService) new TransactionHandler(new PostServiceImpl()).getProxy();
+        int count = postService.rewrite(post);
+        Map<String, Object> retMap = new HashMap<>();
+        if (count == 1) {
+            retMap.put("success", true);
+        } else {
+            retMap.put("success", false);
+        }
+        OutJson.print(request, response, retMap);*/
+
     }
 
     /**
@@ -292,6 +354,9 @@ public class PostController extends HttpServlet {
             recommended = "0";
         }
         String post_excerpt = request.getParameter("zhaiyao");
+        if (post_excerpt==""){
+            post_excerpt = post_content.substring(0,49);
+        }
         String istop = request.getParameter("zhiding	");
         if (istop != null && "1".equals(istop)) {
             istop = "1";

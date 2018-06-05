@@ -54,4 +54,13 @@
         DELETE FROM blog_category
         WHERE id = #{arg0}
     </delete>
+
+    <!--获取导航菜单-->
+    <select id="getNav" resultType="Category">
+        SELECT *
+        FROM blog_nav
+        WHERE status = 1
+        ORDER BY orderNo
+        LIMIT 0, #{arg0}
+    </select>
 </mapper>

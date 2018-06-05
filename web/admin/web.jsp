@@ -14,6 +14,11 @@
     <link rel="stylesheet" href="common/css/bootstrap.min.css">
     <script src="common/js/jquery.min.js"></script>
     <script src="common/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            alert("尚未实现!");
+        })
+    </script>
 </head>
 <body style="background-color:#96b7e0;">
 <div class="row">
@@ -35,7 +40,7 @@
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="index.jsp" title="首页" target="_self"><span
+                    <li><a href="index.jsp" title="首页" target="_blank"><span
                             class="glyphicon glyphicon-home"></span></a></li>
                     <li><a href="admin/write.jsp" title="写文章"><span
                             class="glyphicon glyphicon-pencil"></span></a></li>
@@ -276,7 +281,7 @@
                         </div>
                         <div class="form-group">
                             <label>副标题：</label>
-                            <input type="text" class="form-control" name="subtitle" value="又一个Catfish(鲶鱼) Blog站点"
+                            <input type="text" class="form-control" name="subtitle" value="Hello,world!"
                                    placeholder="副标题">
                         </div>
                         <div class="form-group">

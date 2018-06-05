@@ -79,6 +79,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     /**
      * 根据id删除分类
+     *
      * @param id
      * @return
      */
@@ -86,4 +87,16 @@ public class CategoryServiceImpl implements CategoryService {
     public int deleteClassifyById(String id) {
         return categoryDao.deleteClassifyById(id);
     }
+
+    /**
+     * 获取导航菜单
+     *
+     * @param count
+     * @return
+     */
+    @Override
+    public List<Category> getNav(Integer count) {
+        return categoryDao.getNav(count);
+    }
+
 }

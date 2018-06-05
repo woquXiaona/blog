@@ -22,7 +22,8 @@ import java.util.Map;
         "/post/category/addClassify.do",
         "/post/category/getById.do",
         "/post/category/modifyClassify.do",
-        "/admin/category/deleteClassifyById.do"
+        "/admin/category/deleteClassifyById.do",
+        "/post/category/getNav.do"
 })
 public class CategoryController extends HttpServlet {
     @Override
@@ -40,7 +41,29 @@ public class CategoryController extends HttpServlet {
             doModifyClassify(request, response);
         } else if ("/admin/category/deleteClassifyById.do".equals(servletPath)) {
             doDeleteClassifyById(request, response);
+        } else if ("/post/category/getNav.do".equals(servletPath)) {
+            doGetNav(request, response);
         }
+    }
+
+    /**
+     * 获取导航菜单
+     *
+     * @param request
+     * @param response
+     */
+    private void doGetNav(HttpServletRequest request, HttpServletResponse response) {
+        Integer count = Integer.valueOf(request.getParameter("count"));
+        CategoryService categoryService = (CategoryService) new TransactionHandler(new CategoryServiceImpl()).getProxy();
+        List<Category> navList = categoryService.getNav(count);
+        Map<String, Object> retMap = new HashMap<>(2);
+        if (navList != null) {
+            retMap.put("success", true);
+            retMap.put("navList", navList);
+        } else {
+            retMap.put("success", false);
+        }
+        OutJson.print(request, response, retMap);
     }
 
     /**
